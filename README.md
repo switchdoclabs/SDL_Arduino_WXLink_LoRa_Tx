@@ -2,9 +2,11 @@ SwitchDoc Labs LoRa WXLink Source code for the Transmitter (Tx)
 
 Designed for the Mini Pro LP Arduino Board from SwitchDoc Labs
 
-March 16, 2017
+April 30, 2018
 
-SOFTWAREVERSION 005 
+SOFTWAREVERSION 006 
+
+April 30, 2018 - V006 - Matched GPIO ports to installation instructions - verified LoRa
 
 This software requires you to install RH_RF95 as an Arduino Library.  You can download it here:
 

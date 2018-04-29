@@ -1,5 +1,5 @@
 // SDL_Arduino_WeatherLink_LoRa_Tx
-// SwitchDoc Labs March 2017
+// SwitchDoc Labs April 2018
 //
 #define TXDEBUG
 //#undef TXDEBUG
@@ -9,11 +9,18 @@
 
 #define LED 13
 
-#define SOFTWAREVERSION 9
+#define SOFTWAREVERSION 6
 
 // WIRELESSID is changed if you have more than one unit reporting in the same area.  It is coded in protocol as WIRELESSID*10+SOFTWAREVERSION
-#define WIRELESSID 2
+#define WIRELESSID 3
+// Number of milliseconds between data out - set 1000 or or 30000 or 60000 if you are using DS3231
+//#define SLEEPCYCLE 30000
 
+// WIRELESSID is changed if you have more than one unit reporting in the same area.  It is coded in protocol as WIRELESSID*10+SOFTWAREVERSION
+//#define WIRELESSID 2
+// Number of milliseconds between data out - set 1000 or or 30000 or 60000 if you are using DS3231
+#define SLEEPCYCLE 29000
+//#define SLEEPCYCLE 14000
 
 #include "Crc16.h"
 
@@ -39,11 +46,11 @@ SDL_Arduino_INA3221 SunAirPlus;
 
 #define ENABLE_RADIO 5
 
-#define WATCHDOG_1 6
-#define WATCHDOG_2 7
+#define WATCHDOG_1 8
+#define WATCHDOG_2 9
 
 // Number of milliseconds between data out - set 1000 or or 30000 or 60000 if you are using DS3231
-#define SLEEPCYCLE 30000
+
 
 // Note:  If you are using a External WatchDog Timer, then you should set the timer to exceed SLEEPCYCLE by at least 10%.  If you are using the SwitchDoc Labs Dual WatchDog, SLEEPCYCLE must be less than 240 seconds
 //        or what you set the WatchDog timeout interval.
@@ -71,7 +78,7 @@ SDL_Arduino_INA3221 SunAirPlus;
 */
 
 
-SoftwareSerial SoftSerial(8, 9); // TX, RX
+SoftwareSerial SoftSerial(6, 7); // TX, RX
 
 RH_RF95 rf95(SoftSerial);
 
@@ -413,10 +420,10 @@ void ResetWatchdog()
 
   if (badAM2315Reads < 5)
   {
-      digitalWrite(WATCHDOG_1, LOW);
+    digitalWrite(WATCHDOG_1, LOW);
     delay(200);
     digitalWrite(WATCHDOG_1, HIGH);
- 
+
 #if defined(TXDEBUG)
     Serial.println(F("Watchdog1 Reset - Patted the Dog"));
 #endif
@@ -450,7 +457,10 @@ void setup()
 
   rf95.setFrequency(434.0);
 
-  //rf95.setTxPower(23);
+  rf95.setModemConfig(RH_RF95::Bw31_25Cr48Sf512);
+  //rf95.setModemConfig(RH_RF95::Bw125Cr48Sf4096);
+
+  rf95.setTxPower(23);
 
   //rf95.printRegisters();
 
@@ -470,7 +480,7 @@ void setup()
   delay(1000);
   digitalWrite(LED, HIGH);
   delay(1000);
-  digitalWrite(LED, LOW);  
+  digitalWrite(LED, LOW);
   delay(1000);
   digitalWrite(LED, HIGH);
   delay(1000);
@@ -773,7 +783,7 @@ void loop()
 
     rf95.send(byteBuffer, bufferLength);
     Serial.println(F("----------After Sending packet----------"));
-    if (!rf95.waitPacketSent(3000))
+    if (!rf95.waitPacketSent(6000))
     {
       Serial.println(F("Timeout on transmission"));
       // re-initialize board
@@ -792,9 +802,12 @@ void loop()
 
       rf95.setFrequency(434.0);
 
-      //rf95.setTxPower(23);
+      rf95.setModemConfig(RH_RF95::Bw31_25Cr48Sf512);
+       // rf95.setModemConfig(RH_RF95::Bw125Cr48Sf4096);
 
-      rf95.printRegisters();
+      rf95.setTxPower(23);
+
+      //rf95.printRegisters();
       Serial.println(F("----------Board Reinitialized----------"));
 
 
