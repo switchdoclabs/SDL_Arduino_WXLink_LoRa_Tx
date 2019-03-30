@@ -9,7 +9,7 @@
 
 #define LED 13
 
-#define SOFTWAREVERSION 6
+#define SOFTWAREVERSION 7
 
 // WIRELESSID is changed if you have more than one unit reporting in the same area.  It is coded in protocol as WIRELESSID*10+SOFTWAREVERSION
 #define WIRELESSID 3
@@ -456,11 +456,12 @@ void setup()
   //rf95.setTxPower(13, false);
 
   rf95.setFrequency(434.0);
-
+  rf95.setTxPower(13);
+  
   rf95.setModemConfig(RH_RF95::Bw31_25Cr48Sf512);
   //rf95.setModemConfig(RH_RF95::Bw125Cr48Sf4096);
 
-  rf95.setTxPower(23);
+
 
   //rf95.printRegisters();
 
@@ -803,9 +804,9 @@ void loop()
       rf95.setFrequency(434.0);
 
       rf95.setModemConfig(RH_RF95::Bw31_25Cr48Sf512);
-       // rf95.setModemConfig(RH_RF95::Bw125Cr48Sf4096);
+      // rf95.setModemConfig(RH_RF95::Bw125Cr48Sf4096);
 
-      rf95.setTxPower(23);
+      rf95.setTxPower(13);
 
       //rf95.printRegisters();
       Serial.println(F("----------Board Reinitialized----------"));
@@ -947,5 +948,3 @@ void loop()
 
 
 }
-
-
