@@ -9,7 +9,7 @@
 
 #define LED 13
 
-#define SOFTWAREVERSION 7
+#define SOFTWAREVERSION 8
 
 // WIRELESSID is changed if you have more than one unit reporting in the same area.  It is coded in protocol as WIRELESSID*10+SOFTWAREVERSION
 #define WIRELESSID 3
@@ -441,6 +441,8 @@ void ResetWatchdog()
 void setup()
 {
   Serial.begin(115200);    // TXDEBUGging only
+
+  Serial.println(F("WXLink Tx Present"));
 
   if (!rf95.init())
   {
