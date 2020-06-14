@@ -9,7 +9,7 @@
 
 #define LED 13
 
-#define SOFTWAREVERSION 8
+#define SOFTWAREVERSION 9
 
 // WIRELESSID is changed if you have more than one unit reporting in the same area.  It is coded in protocol as WIRELESSID*10+SOFTWAREVERSION
 #define WIRELESSID 3
@@ -77,10 +77,13 @@ SDL_Arduino_INA3221 SunAirPlus;
 
 */
 
-
 SoftwareSerial SoftSerial(6, 7); // TX, RX
+#define COMSerial SoftSerial
+#define ShowSerial Serial
 
-RH_RF95 rf95(SoftSerial);
+
+
+RH_RF95<SoftwareSerial> rf95(COMSerial);
 
 unsigned long MessageCount = 0;
 
@@ -457,12 +460,16 @@ void setup()
   // you can set transmitter powers from 5 to 23 dBm:
   //rf95.setTxPower(13, false);
 
-  rf95.setFrequency(434.0);
-  rf95.setTxPower(13);
-  
-  rf95.setModemConfig(RH_RF95::Bw31_25Cr48Sf512);
-  //rf95.setModemConfig(RH_RF95::Bw125Cr48Sf4096);
+      rf95.setFrequency(434.0);
 
+      int Bw31_25Cr48Sf512 = 2;
+
+      rf95.setModemConfig(RH_RF95<SoftwareSerial>::ModemConfigChoice(Bw31_25Cr48Sf512));
+      // rf95.setModemConfig(RH_RF95::Bw125Cr48Sf4096);
+
+      rf95.setTxPower(13);
+
+      //rf95.printRegisters();
 
 
   //rf95.printRegisters();
@@ -805,7 +812,9 @@ void loop()
 
       rf95.setFrequency(434.0);
 
-      rf95.setModemConfig(RH_RF95::Bw31_25Cr48Sf512);
+      int Bw31_25Cr48Sf512 = 2;
+
+      rf95.setModemConfig(RH_RF95<SoftwareSerial>::ModemConfigChoice(Bw31_25Cr48Sf512));
       // rf95.setModemConfig(RH_RF95::Bw125Cr48Sf4096);
 
       rf95.setTxPower(13);
